@@ -17,12 +17,12 @@ namespace WebApplication1.Repository
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            using var cmd = new SqlCommand("SELECT Id, Username,Email FROM Users WHERE Id = @id", conn);
+            using var cmd = new SqlCommand("SELECT Id, Username,Email FROM Users WHERE Id = @id ;", conn);
             cmd.Parameters.AddWithValue("@id", id);
 
             using var reader = await cmd.ExecuteReaderAsync();
 
-            
+
             if (!reader.Read()) return null;
 
             return new User
@@ -37,6 +37,24 @@ namespace WebApplication1.Repository
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
+
+            using var cmd = new SqlCommand("INSERT INTO Users (Username, Email)  OUTPUT  inserted.Id, inserted.Username, inserted.Email VALUES (@username, @email);", conn);
+            cmd.Parameters.AddWithValue("@username", user.Name);
+            cmd.Parameters.AddWithValue("@email", user.Email);
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                var id = reader.GetGuid(0);
+                var username = reader.GetString(1);
+                var email = reader.GetString(2);
+
+                return new User
+                {
+                    ID = id,
+                    Name = username,
+                    Email = email,
+                };
+            }
 
             return null;
         }
