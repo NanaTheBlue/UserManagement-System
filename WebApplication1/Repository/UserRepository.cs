@@ -12,7 +12,7 @@ namespace WebApplication1.Repository
         {
             _connectionString = config.GetConnectionString("Default");
         }
-        public async Task<User?> GetByIdAsync(Guid id)
+        public async Task<User?> GetById(Guid id)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();

@@ -5,7 +5,7 @@ namespace WebApplication1.Repository
 {
     public interface IUserRepository
     {
-        Task<User?> GetByIdAsync(Guid id);
+        Task<User?> GetById(Guid id);
         Task<User?> CreateUser(User user);
     }
 
