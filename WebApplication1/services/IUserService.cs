@@ -4,6 +4,7 @@ namespace WebApplication1.Services
 {
     public interface IUserService
     {
-        Task<User?> GetByIdAsync(Guid id);
+        Task<User?> GetUser(Guid id);
+        Task<User?> CreateUser(User user);
     }
 }

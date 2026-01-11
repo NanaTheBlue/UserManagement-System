@@ -1,4 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data.Common;
+using System.Transactions;
 using WebApplication1.Models;
 
 
@@ -10,7 +12,8 @@ namespace WebApplication1.Repository
 
         public UserRepository(IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("Default");
+            _connectionString = config.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Connection string 'Default' not found.");
         }
         public async Task<User?> GetById(Guid id)
         {
@@ -28,7 +31,7 @@ namespace WebApplication1.Repository
             return new User
             {
                 ID = reader.GetGuid(0),
-                Name = reader.GetString(1),
+                Username = reader.GetString(1),
                 Email = reader.GetString(2),
             };
         }
@@ -37,31 +40,52 @@ namespace WebApplication1.Repository
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
+            
 
-            using var cmd = new SqlCommand("INSERT INTO Users (Username, Email)  OUTPUT  inserted.Id, inserted.Username, inserted.Email VALUES (@username, @email);", conn);
-            cmd.Parameters.AddWithValue("@username", user.Name);
-            cmd.Parameters.AddWithValue("@email", user.Email);
-            using var reader = await cmd.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
+            try
             {
-                var id = reader.GetGuid(0);
-                var username = reader.GetString(1);
-                var email = reader.GetString(2);
-
-                return new User
+               
+                using var cmd = new SqlCommand("INSERT INTO Users (Username, Email)  OUTPUT  inserted.Id, inserted.Username, inserted.Email VALUES (@username, @email);", conn);
+                cmd.Parameters.AddWithValue("@username", user.Username);
+                cmd.Parameters.AddWithValue("@email", user.Email);
+                using var reader = await cmd.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
                 {
-                    ID = id,
-                    Name = username,
-                    Email = email,
-                };
+                    var id = reader.GetGuid(0);
+                    var username = reader.GetString(1);
+                    var email = reader.GetString(2);
+
+                  
+
+                    return new User
+                    {
+                        ID = id,
+                        Username = username,
+                        Email = email,
+                    };
+                }
+
+                // in sql server transactions are rolled back automatically on error for single statements
+
+
+
+                return null;
             }
 
-            return null;
+            catch (SqlException e) when (e.Number == 2627) 
+            {
+               
+                return null;
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine($"SqlException: {e.Message}");
+                throw;
+            }
+           
+            
+            
+           
         }
-
-
-
-
-
     }
 }
