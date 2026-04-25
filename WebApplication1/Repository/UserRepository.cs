@@ -15,26 +15,6 @@ namespace WebApplication1.Repository
             _connectionString = config.GetConnectionString("Default")
     ?? throw new InvalidOperationException("Connection string 'Default' not found.");
         }
-        public async Task<User?> GetById(Guid id)
-        {
-            using var conn = new SqlConnection(_connectionString);
-            await conn.OpenAsync();
-
-            using var cmd = new SqlCommand("SELECT Id, Username,Email FROM Users WHERE Id = @id ;", conn);
-            cmd.Parameters.AddWithValue("@id", id);
-
-            using var reader = await cmd.ExecuteReaderAsync();
-
-
-            if (!reader.Read()) return null;
-
-            return new User
-            {
-                ID = reader.GetGuid(0),
-                Username = reader.GetString(1),
-                Email = reader.GetString(2),
-            };
-        }
 
         public async Task<User?> RegisterUser(User user)
         {

@@ -41,21 +41,21 @@ namespace WebApplication1.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
-            if (user == null)
+            if (registerRequest == null)
             {
                 return BadRequest("User payload cannot be null.");
             }
                 
             try
             {
-                var createdUser = await _userService.RegisterUser(user);
-                if (createdUser == null)
+                var error = await _userService.RegisterUser(registerRequest);
+                if (error != null)
                 {
                     return BadRequest("User could not be created.");
                 }
-                return Ok(createdUser);
+                return Ok("User Register");
             }
             catch (Exception e)
             {
