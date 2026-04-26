@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
             }
 
             try {
-                var user = await _userService.GetUser(id);
+                var user = await _userService.GetList(id);
                 if (user == null)
                 {
                     return NotFound();

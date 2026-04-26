@@ -25,9 +25,10 @@ namespace WebApplication1.Repository
             try
             {
                
-                using var cmd = new SqlCommand("INSERT INTO Users (Username, Email)  OUTPUT  inserted.Id, inserted.Username, inserted.Email VALUES (@username, @email);", conn);
+                using var cmd = new SqlCommand("INSERT INTO Users (Username, Email, Passwordhash)  OUTPUT  inserted.Id, inserted.Username, inserted.Email VALUES (@username, @email, @passwordhash);", conn);
                 cmd.Parameters.AddWithValue("@username", user.Username);
                 cmd.Parameters.AddWithValue("@email", user.Email);
+                cmd.Parameters.AddWithValue("@passwordhash", user.PasswordHash);
                 using var reader = await cmd.ExecuteReaderAsync();
                 if (await reader.ReadAsync())
                 {
@@ -35,14 +36,9 @@ namespace WebApplication1.Repository
                     var username = reader.GetString(1);
                     var email = reader.GetString(2);
 
-                  
 
-                    return new User
-                    {
-                        ID = id,
-                        Username = username,
-                        Email = email,
-                    };
+
+         
                 }
 
                 // in sql server transactions are rolled back automatically on error for single statements

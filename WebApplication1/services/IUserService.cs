@@ -6,5 +6,6 @@ namespace WebApplication1.Services
     {
        
         Task<User?> RegisterUser(RegisterRequest registerRequest);
+        Task<User?> GetSession(Guid id);
     }
 }

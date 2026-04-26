@@ -12,7 +12,17 @@ namespace WebApplication1.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User?> RegisterUser(RegisterRequest RegisterRequest)
+
+
+
+
+        public async Task<UserDto?> GetSession(Guid id)
+        {
+            return await _userRepository.GetSession(id);
+
+        }
+
+        public async Task<UserDto?> RegisterUser(RegisterRequest RegisterRequest)
         {
 
             if (string.IsNullOrEmpty(RegisterRequest.Username) || string.IsNullOrEmpty(RegisterRequest.Email) || string.IsNullOrEmpty(RegisterRequest.Password))
@@ -41,7 +51,23 @@ namespace WebApplication1.Services
 
 
 
-            return await _userRepository.RegisterUser(user);
+            var createdUser = await _userRepository.RegisterUser(user);
+
+            if (createdUser == null) {
+
+                // need to handle dis better
+                return null;
+            }
+
+
+            return new UserDto
+            {
+                ID = createdUser.ID,
+                Username = createdUser.Username,
+                Email = createdUser.Email
+            };
+
+
         }
     }
 
