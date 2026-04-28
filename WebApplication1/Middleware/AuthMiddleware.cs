@@ -30,11 +30,16 @@ namespace WebApplication1.Middleware
             // For example, you could decode the token, verify its signature, and check its expiration
             // If the token is valid set the user context (e.g., using HttpContext.Items)
 
-            userService.
-            //get session from database using sessionId, then get user from database using session.UserId, then set user context to user
+            var user = await userService.GetUserFromSession(Guid.Parse(sessionId));
+            if (user == null)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Unauthorized: Invalid token.");
+                return;
+            }
 
 
-            // context.Items["User"] = decodedUser;
+            context.Items["User"] = user;
 
 
 

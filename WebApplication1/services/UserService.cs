@@ -16,9 +16,9 @@ namespace WebApplication1.Services
 
 
 
-        public async Task<UserDto?> GetSession(Guid id)
+        public async Task<UserDto?> GetUserFromSession(Guid id)
         {
-            return await _userRepository.GetSession(id);
+            return await _userRepository.GetUserFromSession(id);
 
         }
 
@@ -55,7 +55,7 @@ namespace WebApplication1.Services
 
             if (createdUser == null) {
 
-                // need to handle dis better
+
                 return null;
             }
 

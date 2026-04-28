@@ -16,28 +16,6 @@ namespace WebApplication1.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            if (id == Guid.Empty)
-            {
-                return BadRequest("Invalid user ID.");
-            }
-
-            try {
-                var user = await _userService.GetList(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(user);
-            } catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while retrieving the user.");
-            }
-           
-        }
 
 
         [HttpPost]

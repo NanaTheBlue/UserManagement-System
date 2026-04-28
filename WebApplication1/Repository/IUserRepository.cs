@@ -7,6 +7,9 @@ namespace WebApplication1.Repository
     {
         
         Task<User?> RegisterUser(User user);
+        Task<UserDto?> GetUserFromSession(Guid id);
+
+
     }
 
 
