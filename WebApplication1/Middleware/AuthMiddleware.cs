@@ -26,10 +26,6 @@ namespace WebApplication1.Middleware
 
 
 
-            // Here you would typically validate the token and set the user context
-            // For example, you could decode the token, verify its signature, and check its expiration
-            // If the token is valid set the user context (e.g., using HttpContext.Items)
-
             var user = await userService.GetUserFromSession(Guid.Parse(sessionId));
             if (user == null)
             {

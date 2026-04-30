@@ -16,10 +16,20 @@ namespace WebApplication1.Services
 
 
 
-        public async Task<UserDto?> GetUserFromSession(Guid id)
+        public async Task<User?> GetUserFromSession(Guid id)
         {
-            return await _userRepository.GetUserFromSession(id);
+            var user = await _userRepository.GetUserFromSession(id);
 
+            if (user == null) { return null; }
+            // Check if session is expired
+
+            if (user.SessionExp == null || user.SessionExp < DateTime.UtcNow)
+            {
+                return null; // Session is expired or not set Should prob return a error instead
+            }
+
+
+            return user;
         }
 
         public async Task<UserDto?> RegisterUser(RegisterRequest RegisterRequest)

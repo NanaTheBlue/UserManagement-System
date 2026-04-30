@@ -6,6 +6,10 @@
         public required string Username { get; set; }
         public required string Email { get; set; }
         public  string ?PasswordHash { get; set; }
+        
+        public string ?SessionId { get; set; }
+
+        public DateTime ? SessionExp { get; set; }
     }
 
     public class RegisterRequest

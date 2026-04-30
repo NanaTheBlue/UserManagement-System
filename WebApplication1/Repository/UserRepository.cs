@@ -77,13 +77,15 @@ namespace WebApplication1.Repository
             try
             {
                
-                using var cmd = new SqlCommand("SELECT Id, Username, Email FROM Users WHERE Session_Id = @session_id;", conn);
+                using var cmd = new SqlCommand("SELECT Id, Username, Email,Session_id,Session_exp FROM Users WHERE Session_Id = @session_id;", conn);
                 cmd.Parameters.AddWithValue("@session_id", id);
                 using var reader = await cmd.ExecuteReaderAsync();
 
                 var idOrdinal = reader.GetOrdinal("Id");
                 var usernameOrdinal = reader.GetOrdinal("Username");
                 var emailOrdinal = reader.GetOrdinal("Email");
+                var sessionIdOrdinal = reader.GetOrdinal("Session_id");
+                var sessionExpOrdinal = reader.GetOrdinal("Session_exp");
 
                 if (await reader.ReadAsync())
                 {
@@ -92,7 +94,9 @@ namespace WebApplication1.Repository
 
                         ID = reader.GetGuid(idOrdinal),
                         Username = reader.GetString(usernameOrdinal),
-                        Email = reader.GetString(emailOrdinal)
+                        Email = reader.GetString(emailOrdinal),
+                        SessionId = reader.GetString(sessionIdOrdinal),
+                        SessionExp = reader.GetDateTime(sessionExpOrdinal)
                     };
 
 

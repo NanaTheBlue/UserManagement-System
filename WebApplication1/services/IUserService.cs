@@ -5,7 +5,7 @@ namespace WebApplication1.Services
     public interface IUserService
     {
        
-        Task<User?> RegisterUser(RegisterRequest registerRequest);
+        Task<UserDto?> RegisterUser(RegisterRequest registerRequest);
         Task<User?> GetUserFromSession(Guid id);
     }
 }
