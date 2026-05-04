@@ -7,5 +7,7 @@ namespace WebApplication1.Services
        
         Task<UserDto?> RegisterUser(RegisterRequest registerRequest);
         Task<User?> GetUserFromSession(Guid id);
+
+        Task<LoginResult> LoginUser(LoginRequest loginRequest);
     }
 }

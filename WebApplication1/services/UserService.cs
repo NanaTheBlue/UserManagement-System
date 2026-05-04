@@ -1,4 +1,5 @@
-﻿using WebApplication1.Models;
+﻿using System.Runtime.InteropServices;
+using WebApplication1.Models;
 using WebApplication1.Repository;
 
 namespace WebApplication1.Services
@@ -25,12 +26,32 @@ namespace WebApplication1.Services
 
             if (user.SessionExp == null || user.SessionExp < DateTime.UtcNow)
             {
-                return null; // Session is expired or not set Should prob return a error instead
+                return null;
             }
 
 
             return user;
         }
+
+
+
+
+        public async Task<LoginResult> LoginUser(LoginRequest LoginRequest)
+        {
+            try
+            {
+                await 
+
+
+            }
+            catch (Exception ex)
+            {
+                return new LoginResult { Success = false, ErrorMessage = ex.Message };
+            }
+
+        }
+
+
 
         public async Task<UserDto?> RegisterUser(RegisterRequest RegisterRequest)
         {
